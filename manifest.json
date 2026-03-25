@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Cover Letter Generator",
+  "version": "1.0.0",
+  "description": "Generate tailored cover letters using your resume on any job listing page",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "action": {
+    "default_popup": "public/popup.html",
+    "default_title": "Cover Letter Generator"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "icons": {
+    "16": "public/icons/icon-16.png",
+    "48": "public/icons/icon-48.png",
+    "128": "public/icons/icon-128.png"
+  }
+}

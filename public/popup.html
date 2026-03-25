@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .upload-area {
+      border: 2px dashed #ddd;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .upload-area:hover {
+      border-color: #4CAF50;
+      background-color: #f9f9f9;
+    }
+
+    .upload-area.disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    #resumeInput {
+      display: none;
+    }
+
+    .upload-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .upload-text strong {
+      color: #333;
+    }
+
+    #resumeStatusText {
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      background-color: #f3f4f6;
+      color: #374151;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #resultText {
+      display: block;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 10px;
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+
+    #resultText.success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    #resultText.error {
+      background-color: #ffebee;
+      color: #b71c1c;
+    }
+
+    #resultText.info {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+
+    #activityText {
+      display: none;
+      margin-top: -8px;
+      margin-bottom: 14px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      background-color: #fff8e1;
+      color: #8a5a00;
+      text-align: center;
+    }
+
+    #activityText.visible {
+      display: block;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .info-box {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #1565c0;
+      margin-top: 16px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .inline-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .inline-row label {
+      margin: 0;
+    }
+
+    .secondary-button {
+      background-color: #0f766e;
+      margin-top: 4px;
+    }
+
+    .secondary-button:hover:not(:disabled) {
+      background-color: #0b5f58;
+    }
+
+    details {
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      background: #fafafa;
+      padding: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    summary::marker {
+      color: #0f766e;
+    }
+
+    .details-content {
+      margin-top: 12px;
+    }
+
+    .muted-text {
+      font-size: 11px;
+      color: #556070;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .draft-panel {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .draft-panel.visible {
+      display: block;
+    }
+
+    #draftEditor {
+      width: 100%;
+      min-height: 220px;
+      padding: 10px 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      line-height: 1.5;
+      resize: vertical;
+      background: #ffffff;
+    }
+
+    #downloadDraftButton {
+      margin-top: 10px;
+      background-color: #1f6feb;
+    }
+
+    #downloadDraftButton:hover:not(:disabled) {
+      background-color: #1a5fcc;
+    }
+
+    #regenerateButton {
+      margin-top: 8px;
+      background-color: #6366f1;
+    }
+
+    #regenerateButton:hover:not(:disabled) {
+      background-color: #4f46e5;
+    }
+
+    #saveDownloadSettingsButton {
+      background-color: #1f6feb;
+      margin-top: 4px;
+    }
+
+    #saveDownloadSettingsButton:hover:not(:disabled) {
+      background-color: #1a5fcc;
+    }
+
+    #folderAreaButton {
+      margin-top: 8px;
+      margin-bottom: 12px;
+      background: #ffffff;
+      border-color: #cfd8dc;
+    }
+
+    #folderAreaButton:hover {
+      border-color: #2196f3;
+      background: #f7fbff;
+    }
+
+    #saveLocationDetails {
+      margin-top: 6px;
+    }
+
+    .checkbox-header {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📄 Cover Letter Generator</h1>
+    <p class="subtitle">Create tailored cover letters instantly</p>
+
+    <div class="section">
+      <div class="section-title">1. Upload Resume</div>
+      <div class="upload-area" id="uploadAreaButton">
+        <input type="file" id="resumeInput" accept=".pdf,.doc,.docx">
+        <div class="upload-text">
+          <strong>Click to upload</strong> or drag and drop<br>
+          PDF, DOC, or DOCX (Max 5MB)
+        </div>
+      </div>
+    </div>
+
+    <div id="resumeStatusText">Save Path: Browser default Downloads behavior</div>
+    <div id="activityText">Working...</div>
+
+    <div class="section">
+      <div class="section-title">2. AI Settings</div>
+      <div class="inline-row">
+        <input type="checkbox" id="aiEnabled">
+        <label for="aiEnabled">Use AI when available</label>
+      </div>
+      <details id="aiDetails">
+        <summary>Configure API Key, Endpoint, and Model</summary>
+        <div class="details-content">
+          <div class="field-group">
+            <label for="apiKeyInput">API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="OpenAI or OpenAI-compatible API key">
+          </div>
+          <div class="field-group">
+            <label for="endpointInput">Endpoint</label>
+            <input type="text" id="endpointInput" value="https://api.openai.com/v1/chat/completions">
+          </div>
+          <div class="field-group">
+            <label for="modelInput">Model</label>
+            <select id="modelSelect">
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="custom">Custom model</option>
+            </select>
+            <input type="text" id="modelInput" value="gpt-4.1-mini" style="display: none;" placeholder="Enter custom model name">
+          </div>
+          <button id="saveAiSettingsButton" class="secondary-button">Save AI Settings</button>
+          <p class="muted-text">If the AI request fails, the extension automatically falls back to the built-in template.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3. Generate Draft</div>
+      <button id="generateButton" disabled>
+        Generate Draft
+      </button>
+      <div id="draftPanel" class="draft-panel">
+        <div class="section-title" style="margin-top: 14px;">4. Review and Edit</div>
+        <textarea id="draftEditor" placeholder="Your generated cover letter draft will appear here..."></textarea>
+        <button id="regenerateButton">Regenerate Draft</button>
+        <button id="downloadDraftButton">Download .docx</button>
+      </div>
+      <div id="resultText" class="info">Last action: Waiting for input</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">5. Save Location</div>
+      <div class="inline-row checkbox-header">
+        <input type="checkbox" id="useSelectedFolder">
+        <label for="useSelectedFolder">Use a selected system folder</label>
+      </div>
+      <div id="folderAreaButton" class="upload-area">
+        <div class="upload-text">
+          <strong id="selectedFolderTitle">Click to choose folder</strong><br>
+          <span id="selectedFolderSubtitle">Currently using browser default Downloads behavior</span>
+        </div>
+      </div>
+      <details id="saveLocationDetails">
+        <summary>Choose save folder and download behavior</summary>
+        <div class="details-content">
+          <button id="saveDownloadSettingsButton" class="secondary-button">Save Save-Location Settings</button>
+          <p class="muted-text">When disabled, files save using your browser's normal default Downloads behavior. When enabled, the extension writes directly to the folder you choose.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="info-box">
+      <strong>How it works:</strong> Open a job listing page, generate a draft, review/edit the text, regenerate if needed, then download your final Word document. If AI is enabled, the extension calls your configured model first and falls back to the template if needed.
+    </div>
+  </div>
+
+  <script src="../dist/popup.js"></script>
+</body>
+</html>

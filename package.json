@@ -1,0 +1,24 @@
+{
+  "name": "cover-letter-generator",
+  "version": "1.0.0",
+  "description": "Chrome extension for generating tailored cover letters",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "docx": "^8.5.0",
+    "file-saver": "^2.0.5",
+    "pdfjs-dist": "^3.11.174"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.217",
+    "@types/file-saver": "^2.0.5",
+    "@types/node": "^20.3.1",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.1.3",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
